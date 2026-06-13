@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plateforme des conseillers techniques - Sport scolaire</title>
+  <style>
+    :root {
+      --primary: #003b73;
+      --secondary: #0b7285;
+      --accent: #f5b942;
+      --success: #2f9e44;
+      --danger: #c92a2a;
+      --light: #f6f8fb;
+      --dark: #1f2937;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --border: #dde3ec;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: var(--light); color: var(--dark); line-height: 1.6; }
+    header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 28px 18px; text-align: center; position: relative; overflow: hidden; }
+    header::after { content: ""; position: absolute; width: 280px; height: 280px; border-radius: 50%; right: -110px; top: -120px; background: rgba(255,255,255,.08); }
+    .header-content { max-width: 1120px; margin: auto; position: relative; z-index: 1; }
+    header h1 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.7rem); letter-spacing: .2px; }
+    header p { margin: 10px auto 0; max-width: 880px; color: #eaf4ff; font-size: 1.05rem; }
+    nav { background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+    .nav-inner { max-width: 1120px; margin: auto; display: flex; gap: 10px; padding: 10px 14px; flex-wrap: wrap; justify-content: center; }
+    button, .btn { border: 0; border-radius: 10px; padding: 11px 16px; cursor: pointer; font-weight: 700; background: var(--primary); color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease; }
+    button:hover, .btn:hover { transform: translateY(-1px); opacity: .95; box-shadow: 0 8px 18px rgba(0,0,0,.12); }
+    .btn-secondary { background: var(--secondary); }
+    .btn-accent { background: var(--accent); color: #172033; }
+    .btn-light { background: #e9eef6; color: var(--primary); }
+    .btn-danger { background: var(--danger); }
+    main { max-width: 1120px; margin: 28px auto; padding: 0 14px 40px; }
+    .section { display: none; animation: fadeIn .25s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .grid { display: grid; gap: 18px; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 800px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; box-shadow: 0 8px 22px rgba(18, 38, 63, .06); }
+    .hero { display: grid; grid-template-columns: 1.4fr .8fr; gap: 18px; align-items: stretch; }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+    .hero h2 { margin-top: 0; color: var(--primary); font-size: clamp(1.5rem, 3vw, 2.3rem); }
+    .pill { display: inline-flex; padding: 7px 11px; border-radius: 999px; background: #e6f3ff; color: var(--primary); font-weight: 700; font-size: .9rem; margin: 4px; }
+    .metric { padding: 16px; border-radius: 16px; background: linear-gradient(135deg, #eef6ff, #ffffff); border: 1px solid var(--border); }
+    .metric strong { display: block; font-size: 2rem; color: var(--primary); }
+    h2, h3 { color: var(--primary); }
+    fieldset { border: 1px solid var(--border); border-radius: 16px; margin: 18px 0; padding: 18px; background: white; }
+    legend { font-weight: 800; color: var(--primary); padding: 0 8px; }
+    label { display: block; font-weight: 700; margin-bottom: 6px; color: #334155; }
+    input, select, textarea { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font: inherit; background: #fff; }
+    textarea { min-height: 92px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 700px) { .form-row { grid-template-columns: 1fr; } }
+    .notice { padding: 14px 16px; border-radius: 12px; background: #fff8e1; border: 1px solid #ffe08a; color: #604100; margin: 12px 0; }
+    .success-box { background: #ebfbee; border: 1px solid #b2f2bb; border-radius: 16px; padding: 20px; margin-top: 20px; }
+    .profile-link { word-break: break-all; background: #edf2ff; padding: 12px; border-radius: 10px; border: 1px dashed #748ffc; color: var(--primary); font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; font-size: .92rem; }
+    th, td { padding: 11px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { background: var(--primary); color: white; position: sticky; top: 55px; }
+    .status { display: inline-flex; padding: 5px 9px; border-radius: 999px; font-size: .8rem; font-weight: 800; }
+    .status.Reçu { background: #e7f5ff; color: #1864ab; }
+    .status.encours { background: #fff3bf; color: #8a5a00; }
+    .status.Incomplet { background: #ffe3e3; color: #c92a2a; }
+    .status.Validé { background: #d3f9d8; color: #2b8a3e; }
+    .status.Nonretenu { background: #e9ecef; color: #495057; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+    .small { font-size: .9rem; color: var(--muted); }
+    .footer { text-align: center; color: var(--muted); padding: 26px 12px; border-top: 1px solid var(--border); background: white; }
+    .hidden { display: none !important; }
+    .print-card { background: white; padding: 22px; border-radius: 16px; border: 1px solid var(--border); }
+
+    /* ===== LOCK OVERLAY ===== */
+    .lock-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0, 29, 61, 0.82);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      animation: fadeIn .3s ease;
+    }
+    .lock-box {
+      background: white; border-radius: 22px; padding: 36px 32px; width: 100%; max-width: 400px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+      text-align: center;
+    }
+    .lock-icon {
+      font-size: 2.8rem; margin-bottom: 10px; display: block;
+      filter: drop-shadow(0 2px 6px rgba(0,59,115,.2));
+    }
+    .lock-box h3 { color: var(--primary); margin: 0 0 6px; font-size: 1.3rem; }
+    .lock-box p { color: var(--muted); font-size: .93rem; margin: 0 0 22px; }
+    .lock-box input[type="password"] {
+      width: 100%; padding: 13px 14px; border: 2px solid var(--border);
+      border-radius: 12px; font-size: 1.05rem; margin-bottom: 14px;
+      transition: border-color .2s;
+      text-align: center; letter-spacing: 4px;
+    }
+    .lock-box input[type="password"]:focus { outline: none; border-color: var(--primary); }
+    .lock-box input[type="password"].error { border-color: var(--danger); animation: shake .3s ease; }
+    .lock-error { color: var(--danger); font-size: .88rem; font-weight: 700; margin-bottom: 12px; min-height: 20px; }
+    .lock-attempts { color: var(--muted); font-size: .82rem; margin-top: 8px; }
+    .lock-btn { width: 100%; padding: 13px; font-size: 1rem; border-radius: 12px; }
+    .lock-blocked { color: var(--danger); font-weight: 700; font-size: .95rem; margin-top: 12px; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    /* Lock icon on nav buttons */
+    .nav-locked::after { content: " 🔒"; font-size: .75rem; opacity: .8; }
+
+    @media print {
+      header, nav, .actions, .footer, .no-print { display: none !important; }
+      body { background: white; }
+      main { margin: 0; max-width: none; }
+      .section { display: none !important; }
+      .section.printable { display: block !important; }
+      .card { box-shadow: none; border: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>Plateforme des conseillers techniques du sport scolaire</h1>
+      <p>Gestion des candidatures provinciales, régionales et nationales pour la promotion et le développement du sport scolaire.</p>
+    </div>
+  </header>
+  <nav>
+    <div class="nav-inner">
+      <button onclick="showSection('home')">Accueil</button>
+      <button class="btn-secondary" onclick="showSection('candidate')">Déposer ma candidature</button>
+      <button class="btn-light" onclick="showSection('profile')">Espace utilisateur</button>
+      <button class="btn-accent nav-locked" onclick="requireAuth('admin')">Espace administrateur</button>
+      <button class="btn-light nav-locked" onclick="requireAuth('dashboard')">Tableau de bord</button>
+    </div>
+  </nav>
+  <main>
+    <section id="home" class="section active">
+      <div class="hero">
+        <div class="card">
+          <h2>Un outil digital pour structurer l'expertise technique</h2>
+          <p>Cette plateforme permet de recevoir, organiser, suivre et analyser les candidatures des conseillers techniques dans les différentes disciplines sportives scolaires.</p>
+          <div>
+            <span class="pill">Niveau provincial</span><span class="pill">Niveau régional</span><span class="pill">Niveau national</span><span class="pill">Sport scolaire</span><span class="pill">Diplômes</span><span class="pill">Projet de développement</span>
+          </div>
+          <div class="actions">
+            <button class="btn-secondary" onclick="showSection('candidate')">Déposer ma candidature</button>
+            <button class="btn-light" onclick="showSection('profile')">Accéder à mon espace utilisateur</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Objectifs de la plateforme</h3>
+          <p>Centraliser les candidatures, fiabiliser les informations, faciliter l'analyse des dossiers et produire des indicateurs de pilotage.</p>
+          <div class="notice">Les données saisies sont destinées uniquement à l'étude des candidatures et au suivi du dispositif.</div>
+        </div>
+      </div>
+      <div class="grid grid-3" style="margin-top:18px">
+        <div class="metric"><strong id="mTotalHome">0</strong>Candidatures enregistrées</div>
+        <div class="metric"><strong id="mValidatedHome">0</strong>Dossiers validés</div>
+        <div class="metric"><strong id="mSportsHome">0</strong>Disciplines renseignées</div>
+      </div>
+    </section>
+    <section id="candidate" class="section">
+      <div class="card">
+        <h2>Formulaire de candidature</h2>
+        <p class="small">Veuillez renseigner soigneusement les informations. Les champs principaux sont obligatoires.</p>
+        <form id="candidateForm">
+          <fieldset><legend>1. Informations personnelles et professionnelles</legend>
+            <div class="form-row"><div><label>Nom et prénom *</label><input name="fullName" required /></div><div><label>CIN ou numéro professionnel *</label><input name="identifier" required /></div></div>
+            <div class="form-row"><div><label>Adresse e-mail *</label><input name="email" type="email" required /></div><div><label>Téléphone *</label><input name="phone" required /></div></div>
+            <div class="form-row"><div><label>Académie régionale *</label><input name="academy" required /></div><div><label>Direction provinciale *</label><input name="province" required /></div></div>
+            <div class="form-row"><div><label>Établissement / structure d'affectation</label><input name="institution" /></div><div><label>Fonction actuelle</label><input name="currentRole" /></div></div>
+            <div class="form-row"><div><label>Discipline sportive concernée *</label><input name="sport" required placeholder="Ex. Athlétisme, football, natation..." /></div><div><label>Niveau d'intervention souhaité *</label><select name="level" required><option value="">Choisir</option><option>Provincial</option><option>Régional</option><option>National</option></select></div></div>
+          </fieldset>
+          <fieldset><legend>2. Diplômes et qualifications</legend>
+            <div class="form-row"><div><label>Dernier diplôme académique obtenu</label><input name="academicDegree" /></div><div><label>Spécialité du diplôme</label><input name="degreeSpecialty" /></div></div>
+            <div class="form-row"><div><label>Établissement ayant délivré le diplôme</label><input name="degreeInstitution" /></div><div><label>Année d'obtention</label><input name="degreeYear" type="number" min="1950" max="2100" /></div></div>
+            <div class="form-row"><div><label>Diplômes sportifs ou fédéraux</label><input name="sportDiplomas" /></div><div><label>Diplômes d'entraîneur</label><input name="coachDiplomas" /></div></div>
+            <div class="form-row"><div><label>Diplômes d'arbitre</label><input name="refereeDiplomas" /></div><div><label>Formations en sport scolaire</label><input name="schoolSportTraining" /></div></div>
+            <div><label>Formations complémentaires</label><textarea name="additionalTraining" placeholder="Encadrement, coaching, management sportif, organisation des compétitions..."></textarea></div>
+            <div class="notice">Prototype : les pièces jointes sont listées par nom de fichier. Pour une version serveur, un stockage sécurisé des fichiers doit être ajouté.</div>
+            <div class="form-row"><div><label>Copies des diplômes / attestations</label><input name="attachments" type="file" multiple accept=".pdf,.png,.jpg,.jpeg" /></div><div><label>Projet en PDF</label><input name="projectFile" type="file" accept=".pdf" /></div></div>
+          </fieldset>
+          <fieldset><legend>3. Niveau d'expérience</legend>
+            <div class="form-row"><div><label>Années d'expérience</label><input name="experienceYears" type="number" min="0" /></div><div><label>Participation aux championnats</label><input name="championships" placeholder="Provinciaux, régionaux, nationaux, internationaux" /></div></div>
+            <div class="form-row"><div><label>Expérience comme entraîneur</label><input name="coachExperience" /></div><div><label>Expérience comme arbitre</label><input name="refereeExperience" /></div></div>
+            <div class="form-row"><div><label>Expérience comme organisateur</label><input name="organizerExperience" /></div><div><label>Expérience comme conseiller / commission technique</label><input name="technicalExperience" /></div></div>
+            <div><label>Résultats obtenus ou contributions significatives</label><textarea name="achievements"></textarea></div>
+          </fieldset>
+          <fieldset><legend>4. Projet de développement de la discipline sportive</legend>
+            <div><label>Diagnostic de la discipline</label><textarea name="diagnosis"></textarea></div>
+            <div class="form-row"><div><label>Objectifs proposés</label><textarea name="objectives"></textarea></div><div><label>Actions prévues</label><textarea name="actions"></textarea></div></div>
+            <div class="form-row"><div><label>Public cible</label><input name="targetAudience" /></div><div><label>Partenaires à mobiliser</label><input name="partners" /></div></div>
+            <div class="form-row"><div><label>Calendrier prévisionnel</label><textarea name="calendar"></textarea></div><div><label>Indicateurs de suivi</label><textarea name="indicators"></textarea></div></div>
+            <div><label>Résultats attendus</label><textarea name="expectedResults"></textarea></div>
+          </fieldset>
+          <div class="actions"><button type="submit">Enregistrer la candidature</button><button type="reset" class="btn-light">Réinitialiser</button></div>
+        </form>
+        <div id="confirmation" class="success-box hidden"></div>
+      </div>
+    </section>
+    <section id="profile" class="section">
+      <div class="card"><h2>Espace utilisateur</h2><p>Collez votre lien personnel ou votre identifiant de dossier pour consulter votre candidature.</p><div class="form-row"><div><label>Lien personnel ou ID</label><input id="profileToken" placeholder="Ex. CT-..." /></div><div style="display:flex; align-items:end;"><button onclick="loadProfile()">Consulter</button></div></div><div id="profileResult"></div></div>
+    </section>
+    <section id="admin" class="section">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+          <h2 style="margin:0">Espace administrateur</h2>
+          <button class="btn-danger" style="padding:8px 14px;font-size:.85rem;" onclick="logout()">🔓 Se déconnecter</button>
+        </div>
+        <div class="notice">Prototype local : aucun mot de passe serveur n'est utilisé. Pour une version réelle, il faut ajouter une authentification sécurisée.</div>
+        <div class="grid grid-3"><div><label>Académie</label><input id="filterAcademy" oninput="renderAdminTable()" /></div><div><label>Discipline</label><input id="filterSport" oninput="renderAdminTable()" /></div><div><label>Statut</label><select id="filterStatus" onchange="renderAdminTable()"><option value="">Tous</option><option>Reçu</option><option>En cours d'étude</option><option>Incomplet</option><option>Validé</option><option>Non retenu</option></select></div></div>
+        <div class="actions"><button onclick="exportCSV()">Exporter Excel/CSV</button><button class="btn-light" onclick="window.print()">Imprimer / PDF</button><button class="btn-danger" onclick="clearAllData()">Vider les données démo</button></div>
+        <div style="overflow:auto;"><table><thead><tr><th>ID</th><th>Nom</th><th>Académie</th><th>Direction</th><th>Sport</th><th>Niveau</th><th>Diplôme</th><th>Exp.</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="adminTable"></tbody></table></div>
+      </div>
+    </section>
+    <section id="dashboard" class="section">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+          <h2 style="margin:0">Tableau de bord statistique</h2>
+          <button class="btn-danger" style="padding:8px 14px;font-size:.85rem;" onclick="logout()">🔓 Se déconnecter</button>
+        </div>
+        <div class="grid grid-3"><div class="metric"><strong id="mTotal">0</strong>Total candidats</div><div class="metric"><strong id="mReceived">0</strong>Dossiers reçus</div><div class="metric"><strong id="mValidated">0</strong>Dossiers validés</div><div class="metric"><strong id="mIncomplete">0</strong>Dossiers incomplets</div><div class="metric"><strong id="mRejected">0</strong>Non retenus</div><div class="metric"><strong id="mNational">0</strong>Niveau national</div></div>
+      </div>
+      <div class="grid grid-2" style="margin-top:18px"><div class="card"><h3>Par académie</h3><div id="byAcademy"></div></div><div class="card"><h3>Par discipline sportive</h3><div id="bySport"></div></div><div class="card"><h3>Par niveau</h3><div id="byLevel"></div></div><div class="card"><h3>Par diplôme</h3><div id="byDiploma"></div></div></div>
+    </section>
+    <section id="printableProfile" class="section"><div id="printContent" class="print-card"></div></section>
+  </main>
+  <div class="footer">Direction de la Promotion du Sport Scolaire - Prototype fonctionnel local</div>
+
+  <!-- ===== LOCK MODAL ===== -->
+  <div id="lockOverlay" class="lock-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+    <div class="lock-box">
+      <span class="lock-icon">🔐</span>
+      <h3 id="lockTitle">Accès sécurisé</h3>
+      <p id="lockDesc">Saisissez le code administrateur pour accéder à cet espace.</p>
+      <input type="password" id="lockInput" placeholder="••••••••" maxlength="32"
+             onkeydown="if(event.key==='Enter') checkPassword()"
+             oninput="clearLockError()" />
+      <div id="lockError" class="lock-error"></div>
+      <button class="lock-btn" onclick="checkPassword()">Confirmer</button>
+      <button class="btn-light lock-btn" style="margin-top:8px;" onclick="closeLock()">Annuler</button>
+      <div id="lockAttempts" class="lock-attempts"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIGURATION DU MOT DE PASSE =====
+    // Pour changer le code : modifiez la valeur ci-dessous
+    const ADMIN_PASSWORD = "Sport2025!";
+    const MAX_ATTEMPTS = 5;
+    const BLOCK_DURATION_MS = 2 * 60 * 1000; // 2 minutes
+
+    // ===== ÉTAT DE LA SESSION =====
+    const SESSION_KEY = "ct_admin_session";
+    const BLOCK_KEY   = "ct_admin_blocked";
+    const ATTEMPTS_KEY = "ct_admin_attempts";
+    let pendingSection = null;
+
+    function isAuthenticated() {
+      return sessionStorage.getItem(SESSION_KEY) === "granted";
+    }
+    function authenticate() {
+      sessionStorage.setItem(SESSION_KEY, "granted");
+      localStorage.removeItem(ATTEMPTS_KEY);
+      localStorage.removeItem(BLOCK_KEY);
+    }
+    function logout() {
+      sessionStorage.removeItem(SESSION_KEY);
+      showSection("home");
+    }
+
+    // ===== GESTION DES TENTATIVES =====
+    function getAttempts() { return parseInt(localStorage.getItem(ATTEMPTS_KEY) || "0"); }
+    function incrementAttempts() { localStorage.setItem(ATTEMPTS_KEY, getAttempts() + 1); }
+    function isBlocked() {
+      const until = parseInt(localStorage.getItem(BLOCK_KEY) || "0");
+      if (Date.now() < until) return until;
+      if (until) { localStorage.removeItem(BLOCK_KEY); localStorage.removeItem(ATTEMPTS_KEY); }
+      return false;
+    }
+    function blockUser() {
+      const until = Date.now() + BLOCK_DURATION_MS;
+      localStorage.setItem(BLOCK_KEY, until);
+    }
+
+    // ===== AFFICHAGE DU VERROU =====
+    function requireAuth(section) {
+      if (isAuthenticated()) { showSection(section); return; }
+      const blocked = isBlocked();
+      if (blocked) { showBlockedMessage(blocked); return; }
+      pendingSection = section;
+      document.getElementById("lockInput").value = "";
+      document.getElementById("lockError").textContent = "";
+      document.getElementById("lockAttempts").textContent = "";
+      document.getElementById("lockOverlay").classList.remove("hidden");
+      setTimeout(() => document.getElementById("lockInput").focus(), 50);
+    }
+    function closeLock() {
+      document.getElementById("lockOverlay").classList.add("hidden");
+      pendingSection = null;
+    }
+    function clearLockError() {
+      document.getElementById("lockInput").classList.remove("error");
+      document.getElementById("lockError").textContent = "";
+    }
+
+    function checkPassword() {
+      const blocked = isBlocked();
+      if (blocked) { showBlockedMessage(blocked); return; }
+
+      const input = document.getElementById("lockInput").value;
+      if (input === ADMIN_PASSWORD) {
+        authenticate();
+        document.getElementById("lockOverlay").classList.add("hidden");
+        if (pendingSection) showSection(pendingSection);
+        pendingSection = null;
+      } else {
+        incrementAttempts();
+        const remaining = MAX_ATTEMPTS - getAttempts();
+        const inp = document.getElementById("lockInput");
+        inp.classList.add("error");
+        inp.value = "";
+        if (remaining <= 0) {
+          blockUser();
+          showBlockedMessage(isBlocked());
+        } else {
+          document.getElementById("lockError").textContent = "Code incorrect. Veuillez réessayer.";
+          document.getElementById("lockAttempts").textContent =
+            remaining === 1 ? "⚠️ Dernière tentative avant blocage temporaire."
+                            : `Tentatives restantes : ${remaining}`;
+        }
+      }
+    }
+    function showBlockedMessage(until) {
+      const mins = Math.ceil((until - Date.now()) / 60000);
+      document.getElementById("lockError").textContent = "";
+      document.getElementById("lockAttempts").textContent = "";
+      document.getElementById("lockInput").disabled = true;
+      document.getElementById("lockInput").placeholder = "Accès bloqué";
+      document.getElementById("lockInput").classList.add("error");
+      document.querySelector(".lock-box button").disabled = true;
+      document.getElementById("lockAttempts").innerHTML =
+        `<span class="lock-blocked">🚫 Trop de tentatives. Réessayez dans ${mins} minute${mins > 1 ? "s" : ""}.</span>`;
+      // re-enable when block expires
+      setTimeout(() => {
+        document.getElementById("lockInput").disabled = false;
+        document.getElementById("lockInput").placeholder = "••••••••";
+        document.getElementById("lockInput").classList.remove("error");
+        document.querySelector(".lock-box button").disabled = false;
+        document.getElementById("lockAttempts").textContent = "";
+      }, until - Date.now());
+    }
+
+    // ===== NAVIGATION =====
+    const storageKey = "ct_sport_scolaire_candidates_v1";
+    const getCandidates = () => JSON.parse(localStorage.getItem(storageKey) || "[]");
+    function saveCandidates(data){ localStorage.setItem(storageKey, JSON.stringify(data)); refreshAll(); }
+    function makeToken(){ return "CT-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 7).toUpperCase(); }
+    function showSection(id){
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active", "printable"));
+      document.getElementById(id).classList.add("active");
+      if(id === "admin") renderAdminTable();
+      if(id === "dashboard" || id === "home") renderDashboard();
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+    function statusClass(s){ return s === "En cours d'étude" ? "encours" : s === "Non retenu" ? "Nonretenu" : s; }
+
+    document.getElementById("candidateForm").addEventListener("submit", function(e){
+      e.preventDefault(); const form = e.target; const fd = new FormData(form); const candidate = {};
+      fd.forEach((value, key) => { if(!(value instanceof File)) candidate[key] = value; });
+      candidate.id = makeToken(); candidate.status = "Reçu"; candidate.createdAt = new Date().toLocaleString("fr-FR");
+      candidate.attachments = form.attachments.files ? Array.from(form.attachments.files).map(f => f.name) : [];
+      candidate.projectFile = form.projectFile.files && form.projectFile.files[0] ? form.projectFile.files[0].name : "";
+      candidate.profileLink = location.href.split("#")[0] + "#profile=" + candidate.id;
+      const data = getCandidates(); data.push(candidate); saveCandidates(data);
+
+if (window.enregistrerCandidatureFirebase) {
+  window.enregistrerCandidatureFirebase(candidate);
+}
+      const box = document.getElementById("confirmation"); box.classList.remove("hidden");
+      box.innerHTML = `<h3>Votre candidature a été enregistrée avec succès.</h3><p>Un lien utilisateur personnel vous permettra de suivre l'état de votre dossier et de compléter vos informations si nécessaire.</p><p><strong>Nom :</strong> ${escapeHTML(candidate.fullName)}</p><p><strong>Discipline :</strong> ${escapeHTML(candidate.sport)}</p><p><strong>Niveau demandé :</strong> ${escapeHTML(candidate.level)}</p><p><strong>Statut initial :</strong> <span class="status Reçu">Reçu</span></p><p><strong>Lien personnel :</strong></p><div class="profile-link">${candidate.profileLink}</div><div class="actions"><button onclick="printCandidate('${candidate.id}')">Télécharger / imprimer ma fiche</button><button class="btn-light" onclick="copyText('${candidate.profileLink}')">Copier le lien</button></div>`;
+      form.reset();
+    });
+
+    function escapeHTML(str){ return String(str || "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])); }
+    function copyText(text){ navigator.clipboard.writeText(text); alert("Lien copié."); }
+    function renderCandidateCard(c){ return `<div class="card"><h3>${escapeHTML(c.fullName)} <span class="status ${statusClass(c.status)}">${escapeHTML(c.status)}</span></h3><p><strong>ID :</strong> ${escapeHTML(c.id)}</p><p><strong>Académie :</strong> ${escapeHTML(c.academy)} | <strong>Direction :</strong> ${escapeHTML(c.province)}</p><p><strong>Discipline :</strong> ${escapeHTML(c.sport)} | <strong>Niveau :</strong> ${escapeHTML(c.level)}</p><p><strong>Diplôme :</strong> ${escapeHTML(c.academicDegree)} - ${escapeHTML(c.degreeSpecialty)}</p><p><strong>Expérience :</strong> ${escapeHTML(c.experienceYears)} année(s)</p><p><strong>Projet :</strong> ${escapeHTML((c.objectives || "").slice(0, 240))}</p><p><strong>Pièces jointes :</strong> ${escapeHTML((c.attachments || []).join(", ") || "Aucune")}</p><div class="actions"><button onclick="printCandidate('${c.id}')">Télécharger / imprimer la fiche</button></div></div>`; } 
+async function findCandidateById(id) {
+  const data = window.lireCandidaturesFirebase
+    ? await window.lireCandidaturesFirebase()
+    : getCandidates();
+
+  return data.find(c => c.id === id || c.firebaseId === id);
+}
+    async function loadProfile() {
+  const token = document.getElementById("profileToken").value.trim();
+  const id = token.includes("#profile=")
+    ? token.split("#profile=")[1]
+    : token;
+
+  document.getElementById("profileResult").innerHTML =
+    `<div class="notice">Recherche du dossier en cours...</div>`;
+
+  const c = await findCandidateById(id);
+
+  document.getElementById("profileResult").innerHTML = c
+    ? renderCandidateCard(c)
+    : `<div class="notice">Aucun dossier trouvé avec cet identifiant.</div>`;
+}
+    async function renderAdminTable(){ const a = document.getElementById("filterAcademy").value.toLowerCase(); const s = document.getElementById("filterSport").value.toLowerCase(); const st = document.getElementById("filterStatus").value; const allCandidates = window.lireCandidaturesFirebase
+  ? await window.lireCandidaturesFirebase()
+  : getCandidates();
+
+const rows = allCandidates.filter(c => (!a || (c.academy || "").toLowerCase().includes(a)) && (!s || (c.sport || "").toLowerCase().includes(s)) && (!st || c.status === st)); document.getElementById("adminTable").innerHTML = rows.map(c => `<tr><td>${escapeHTML(c.id)}</td><td>${escapeHTML(c.fullName)}</td><td>${escapeHTML(c.academy)}</td><td>${escapeHTML(c.province)}</td><td>${escapeHTML(c.sport)}</td><td>${escapeHTML(c.level)}</td><td>${escapeHTML(c.academicDegree)}</td><td>${escapeHTML(c.experienceYears || "0")} an(s)</td><td><span class="status ${statusClass(c.status)}">${escapeHTML(c.status)}</span></td><td><select onchange="updateStatus('${c.firebaseId || c.id}', this.value)">${["Reçu","En cours d'étude","Incomplet","Validé","Non retenu"].map(x => `<option ${x===c.status?"selected":""}>${x}</option>`).join("")}</select><button class="btn-light" onclick="printCandidate('${c.id}')">Fiche</button></td></tr>`).join(""); renderDashboard(); }
+    async function updateStatus(id, status) {
+  if (window.modifierStatutFirebase) {
+    await window.modifierStatutFirebase(id, status);
+  }
+
+  await renderAdminTable();
+}
+    async function printCandidate(id) {
+  const c = await findCandidateById(id);
+
+  if (!c) {
+    alert("Aucune candidature trouvée pour l'impression.");
+    return;
+  }
+
+  document.getElementById("printContent").innerHTML = `
+    <h2>Fiche synthétique de candidature</h2>
+    <p><strong>ID dossier :</strong> ${escapeHTML(c.id || c.firebaseId)}</p>
+    <p><strong>Date de dépôt :</strong> ${escapeHTML(c.createdAt)}</p>
+    <p><strong>Statut :</strong> ${escapeHTML(c.status)}</p>
+
+    <hr>
+
+    <h3>Informations personnelles et professionnelles</h3>
+    <p><strong>Nom et prénom :</strong> ${escapeHTML(c.fullName)}</p>
+    <p><strong>CIN / identifiant :</strong> ${escapeHTML(c.identifier)}</p>
+    <p><strong>Email :</strong> ${escapeHTML(c.email)} | <strong>Téléphone :</strong> ${escapeHTML(c.phone)}</p>
+    <p><strong>Académie :</strong> ${escapeHTML(c.academy)} | <strong>Direction :</strong> ${escapeHTML(c.province)}</p>
+    <p><strong>Établissement :</strong> ${escapeHTML(c.institution)} | <strong>Fonction :</strong> ${escapeHTML(c.currentRole)}</p>
+    <p><strong>Discipline :</strong> ${escapeHTML(c.sport)} | <strong>Niveau :</strong> ${escapeHTML(c.level)}</p>
+
+    <h3>Diplômes et qualifications</h3>
+    <p><strong>Diplôme académique :</strong> ${escapeHTML(c.academicDegree)} - ${escapeHTML(c.degreeSpecialty)} (${escapeHTML(c.degreeYear)})</p>
+    <p><strong>Diplômes sportifs :</strong> ${escapeHTML(c.sportDiplomas)}</p>
+    <p><strong>Entraîneur :</strong> ${escapeHTML(c.coachDiplomas)} | <strong>Arbitre :</strong> ${escapeHTML(c.refereeDiplomas)}</p>
+    <p><strong>Formations :</strong> ${escapeHTML(c.schoolSportTraining)} ${escapeHTML(c.additionalTraining)}</p>
+
+    <h3>Expérience</h3>
+    <p><strong>Années :</strong> ${escapeHTML(c.experienceYears)}</p>
+    <p><strong>Championnats :</strong> ${escapeHTML(c.championships)}</p>
+    <p><strong>Contributions :</strong> ${escapeHTML(c.achievements)}</p>
+
+    <h3>Projet de développement</h3>
+    <p><strong>Diagnostic :</strong> ${escapeHTML(c.diagnosis)}</p>
+    <p><strong>Objectifs :</strong> ${escapeHTML(c.objectives)}</p>
+    <p><strong>Actions :</strong> ${escapeHTML(c.actions)}</p>
+    <p><strong>Partenaires :</strong> ${escapeHTML(c.partners)}</p>
+    <p><strong>Indicateurs :</strong> ${escapeHTML(c.indicators)}</p>
+    <p><strong>Résultats attendus :</strong> ${escapeHTML(c.expectedResults)}</p>
+
+    <h3>Pièces jointes</h3>
+    <p><strong>Copies des diplômes / attestations :</strong> ${escapeHTML((c.attachments || []).join(", ") || "Aucune")}</p>
+    <p><strong>Projet PDF :</strong> ${escapeHTML(c.projectFile || "Aucun")}</p>
+  `;
+
+  document.querySelectorAll(".section").forEach(s =>
+    s.classList.remove("active", "printable")
+  );
+
+  document.getElementById("printableProfile").classList.add("active", "printable");
+
+  setTimeout(() => window.print(), 200);
+}
+    function aggregateByFromData(data, key) {
+  const map = {};
+
+  data.forEach(c => {
+    const val = c[key] || "Non renseigné";
+    map[val] = (map[val] || 0) + 1;
+  });
+
+  return map;
+}
+    function renderList(target, data){ const entries = Object.entries(data).sort((a,b) => b[1]-a[1]); document.getElementById(target).innerHTML = entries.length ? entries.map(([k,v]) => `<p><strong>${escapeHTML(k)}</strong> : ${v}</p>`).join("") : "<p class='small'>Aucune donnée.</p>"; }
+    async function renderDashboard() {
+  const data = window.lireCandidaturesFirebase
+    ? await window.lireCandidaturesFirebase()
+    : getCandidates();
+
+  const count = st => data.filter(c => c.status === st).length;
+  const level = lv => data.filter(c => c.level === lv).length;
+  const sports = new Set(data.map(c => c.sport).filter(Boolean));
+
+  ["mTotal", "mTotalHome"].forEach(id => setText(id, data.length));
+
+  setText("mReceived", count("Reçu"));
+  setText("mValidated", count("Validé"));
+  setText("mValidatedHome", count("Validé"));
+  setText("mIncomplete", count("Incomplet"));
+  setText("mRejected", count("Non retenu"));
+  setText("mNational", level("National"));
+  setText("mSportsHome", sports.size);
+
+  renderList("byAcademy", aggregateByFromData(data, "academy"));
+  renderList("bySport", aggregateByFromData(data, "sport"));
+  renderList("byLevel", aggregateByFromData(data, "level"));
+  renderList("byDiploma", aggregateByFromData(data, "academicDegree"));
+}
+    function setText(id, value){ const el = document.getElementById(id); if(el) el.textContent = value; }
+    async function exportCSV() {
+  const data = window.lireCandidaturesFirebase
+    ? await window.lireCandidaturesFirebase()
+    : getCandidates();
+
+  const headers = [
+    "id",
+    "fullName",
+    "identifier",
+    "email",
+    "phone",
+    "academy",
+    "province",
+    "institution",
+    "currentRole",
+    "sport",
+    "level",
+    "academicDegree",
+    "degreeSpecialty",
+    "experienceYears",
+    "status",
+    "createdAt"
+  ];
+
+  const csv = [headers.join(";")]
+    .concat(data.map(c =>
+      headers.map(h =>
+        `"${String(c[h] || "").replace(/"/g, '""')}"`
+      ).join(";")
+    ))
+    .join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "candidatures_conseillers_techniques.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+    function clearAllData(){ if(confirm("Voulez-vous vraiment supprimer toutes les données de démonstration ?")){ localStorage.removeItem(storageKey); refreshAll(); renderAdminTable(); } }
+    function refreshAll(){ renderDashboard(); if(document.getElementById("admin").classList.contains("active")) renderAdminTable(); }
+    function loadFromHash(){ if(location.hash.startsWith("#profile=")){ showSection("profile"); document.getElementById("profileToken").value = location.hash.replace("#profile=", ""); loadProfile(); } }
+    window.addEventListener("load", async function () {
+  await renderDashboard();
+  loadFromHash();
+});
+  </script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwum7Lc3qOBQxi7LCnrf7ZKC1hDIvOYxg",
+    authDomain: "plateforme-des-conseillers.firebaseapp.com",
+    projectId: "plateforme-des-conseillers",
+    storageBucket: "plateforme-des-conseillers.firebasestorage.app",
+    messagingSenderId: "28801299958",
+    appId: "1:28801299958:web:3665eafd2ffaa0b8a8c3d7",
+    measurementId: "G-L2M56TLZQP"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+async function enregistrerCandidatureFirebase(data) {
+  try {
+    await addDoc(collection(db, "candidatures"), {
+      ...data,
+      dateSoumission: serverTimestamp()
+    });
+
+    console.log("Candidature enregistrée dans Firebase");
+  } catch (error) {
+    console.error("Erreur Firebase :", error);
+    alert("Erreur lors de l'enregistrement dans Firebase.");
+  }
+}
+
+window.enregistrerCandidatureFirebase = enregistrerCandidatureFirebase;
+
+async function lireCandidaturesFirebase() {
+  try {
+    const snapshot = await getDocs(collection(db, "candidatures"));
+
+    const candidatures = [];
+    snapshot.forEach((document) => {
+      candidatures.push({
+        firebaseId: document.id,
+        ...document.data()
+      });
+    });
+
+    return candidatures;
+  } catch (error) {
+    console.error("Erreur de lecture Firebase :", error);
+    alert("Erreur lors de la lecture des candidatures Firebase.");
+    return [];
+  }
+}
+
+window.lireCandidaturesFirebase = lireCandidaturesFirebase;
+async function modifierStatutFirebase(firebaseId, nouveauStatut) {
+  try {
+    await updateDoc(doc(db, "candidatures", firebaseId), {
+      status: nouveauStatut
+    });
+
+    console.log("Statut mis à jour dans Firebase");
+  } catch (error) {
+    console.error("Erreur mise à jour Firebase :", error);
+    alert("Erreur lors de la mise à jour du statut.");
+  }
+}
+
+window.modifierStatutFirebase = modifierStatutFirebase;
+</script>
+</body>
+</html>
