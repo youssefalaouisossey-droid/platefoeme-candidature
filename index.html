@@ -114,6 +114,43 @@
       80% { transform: translateX(5px); }
     }
 
+
+    /* ===== SUBMIT SPINNER ===== */
+    .btn-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.45);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+      display: inline-block;
+    }
+    button[disabled] {
+      opacity: .7;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .submit-status {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+      margin-top: -4px;
+    }
+    .submit-status.active { display: flex; }
+    .submit-status .mini-spinner {
+      width: 15px;
+      height: 15px;
+      border: 2px solid #cbd5e1;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     /* Lock icon on nav buttons */
     .nav-locked::after { content: " 🔒"; font-size: .75rem; opacity: .8; }
 
@@ -203,7 +240,14 @@
  <div class="form-row"><div><label>Calendrier prévisionnel</label><textarea name="calendar"></textarea></div><div><label>Indicateurs de suivi</label><textarea name="indicators"></textarea></div></div>
  <div><label>Résultats attendus</label><textarea name="expectedResults"></textarea></div>
  </fieldset>
- <div class="actions"><button type="submit">Enregistrer la candidature</button><button type="reset" class="btn-light">Réinitialiser</button></div>
+ <div class="actions">
+ <button id="candidateSubmitBtn" type="submit"><span id="candidateSubmitText">Enregistrer la candidature</span></button>
+ <button id="candidateResetBtn" type="reset" class="btn-light">Réinitialiser</button>
+ </div>
+ <div id="candidateSubmitStatus" class="submit-status" aria-live="polite">
+ <span class="mini-spinner"></span>
+ <span>Téléversement des fichiers et enregistrement en cours...</span>
+ </div>
  </form>
  <div id="confirmation" class="success-box hidden"></div>
  </div>
@@ -380,8 +424,28 @@
     }
     function statusClass(s){ return s === "En cours d'étude" ? "encours" : s === "Non retenu" ? "Nonretenu" : s; }
 
+    function setCandidateSubmitLoading(isLoading) {
+      const submitBtn = document.getElementById("candidateSubmitBtn");
+      const resetBtn = document.getElementById("candidateResetBtn");
+      const submitText = document.getElementById("candidateSubmitText");
+      const submitStatus = document.getElementById("candidateSubmitStatus");
+
+      if (!submitBtn || !resetBtn || !submitText || !submitStatus) return;
+
+      submitBtn.disabled = isLoading;
+      resetBtn.disabled = isLoading;
+      submitBtn.setAttribute("aria-busy", isLoading ? "true" : "false");
+      submitStatus.classList.toggle("active", isLoading);
+
+      submitText.innerHTML = isLoading
+        ? `<span class="btn-spinner" aria-hidden="true"></span> Enregistrement...`
+        : "Enregistrer la candidature";
+    }
+
     document.getElementById("candidateForm").addEventListener("submit", async function(e){
       e.preventDefault();
+
+      setCandidateSubmitLoading(true);
 
       const form = e.target;
       const fd = new FormData(form);
@@ -428,6 +492,8 @@
       } catch (error) {
         console.error("Erreur upload fichiers :", error);
         alert(error.message || "Erreur lors de l'upload des fichiers.");
+      } finally {
+        setCandidateSubmitLoading(false);
       }
     });
 
