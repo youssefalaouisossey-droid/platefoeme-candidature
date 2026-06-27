@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plateforme des conseillers techniques - Sport scolaire</title>
-  <style>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Plateforme des conseillers techniques - Sport scolaire</title>
+ <style>
     :root {
       --primary: #003b73;
       --secondary: #0b7285;
@@ -92,14 +92,15 @@
     }
     .lock-box h3 { color: var(--primary); margin: 0 0 6px; font-size: 1.3rem; }
     .lock-box p { color: var(--muted); font-size: .93rem; margin: 0 0 22px; }
-    .lock-box input[type="password"] {
+    .lock-box input[type="email"], .lock-box input[type="password"] {
       width: 100%; padding: 13px 14px; border: 2px solid var(--border);
       border-radius: 12px; font-size: 1.05rem; margin-bottom: 14px;
       transition: border-color .2s;
-      text-align: center; letter-spacing: 4px;
+      text-align: center;
     }
-    .lock-box input[type="password"]:focus { outline: none; border-color: var(--primary); }
-    .lock-box input[type="password"].error { border-color: var(--danger); animation: shake .3s ease; }
+    .lock-box input[type="password"] { letter-spacing: 4px; }
+    .lock-box input[type="email"]:focus, .lock-box input[type="password"]:focus { outline: none; border-color: var(--primary); }
+    .lock-box input[type="email"].error, .lock-box input[type="password"].error { border-color: var(--danger); animation: shake .3s ease; }
     .lock-error { color: var(--danger); font-size: .88rem; font-weight: 700; margin-bottom: 12px; min-height: 20px; }
     .lock-attempts { color: var(--muted); font-size: .82rem; margin-top: 8px; }
     .lock-btn { width: 100%; padding: 13px; font-size: 1rem; border-radius: 12px; }
@@ -124,241 +125,246 @@
       .section.printable { display: block !important; }
       .card { box-shadow: none; border: 0; }
     }
-  </style>
+ </style>
 </head>
 <body>
-  <header>
-    <div class="header-content">
-      <h1>Plateforme des conseillers techniques du sport scolaire</h1>
-      <p>Gestion des candidatures provinciales, régionales et nationales pour la promotion et le développement du sport scolaire.</p>
-    </div>
-  </header>
-  <nav>
-    <div class="nav-inner">
-      <button onclick="showSection('home')">Accueil</button>
-      <button class="btn-secondary" onclick="showSection('candidate')">Déposer ma candidature</button>
-      <button class="btn-light" onclick="showSection('profile')">Espace utilisateur</button>
-      <button class="btn-accent nav-locked" onclick="requireAuth('admin')">Espace administrateur</button>
-      <button class="btn-light nav-locked" onclick="requireAuth('dashboard')">Tableau de bord</button>
-    </div>
-  </nav>
-  <main>
-    <section id="home" class="section active">
-      <div class="hero">
-        <div class="card">
-          <h2>Un outil digital pour structurer l'expertise technique</h2>
-          <p>Cette plateforme permet de recevoir, organiser, suivre et analyser les candidatures des conseillers techniques dans les différentes disciplines sportives scolaires.</p>
-          <div>
-            <span class="pill">Niveau provincial</span><span class="pill">Niveau régional</span><span class="pill">Niveau national</span><span class="pill">Sport scolaire</span><span class="pill">Diplômes</span><span class="pill">Projet de développement</span>
-          </div>
-          <div class="actions">
-            <button class="btn-secondary" onclick="showSection('candidate')">Déposer ma candidature</button>
-            <button class="btn-light" onclick="showSection('profile')">Accéder à mon espace utilisateur</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Objectifs de la plateforme</h3>
-          <p>Centraliser les candidatures, fiabiliser les informations, faciliter l'analyse des dossiers et produire des indicateurs de pilotage.</p>
-          <div class="notice">Les données saisies sont destinées uniquement à l'étude des candidatures et au suivi du dispositif.</div>
-        </div>
-      </div>
-      <div class="grid grid-3" style="margin-top:18px">
-        <div class="metric"><strong id="mTotalHome">0</strong>Candidatures enregistrées</div>
-        <div class="metric"><strong id="mValidatedHome">0</strong>Dossiers validés</div>
-        <div class="metric"><strong id="mSportsHome">0</strong>Disciplines renseignées</div>
-      </div>
-    </section>
-    <section id="candidate" class="section">
-      <div class="card">
-        <h2>Formulaire de candidature</h2>
-        <p class="small">Veuillez renseigner soigneusement les informations. Les champs principaux sont obligatoires.</p>
-        <form id="candidateForm">
-          <fieldset><legend>1. Informations personnelles et professionnelles</legend>
-            <div class="form-row"><div><label>Nom et prénom *</label><input name="fullName" required /></div><div><label>CIN ou numéro professionnel *</label><input name="identifier" required /></div></div>
-            <div class="form-row"><div><label>Adresse e-mail *</label><input name="email" type="email" required /></div><div><label>Téléphone *</label><input name="phone" required /></div></div>
-            <div class="form-row"><div><label>Académie régionale *</label><input name="academy" required /></div><div><label>Direction provinciale *</label><input name="province" required /></div></div>
-            <div class="form-row"><div><label>Établissement / structure d'affectation</label><input name="institution" /></div><div><label>Fonction actuelle</label><input name="currentRole" /></div></div>
-            <div class="form-row"><div><label>Discipline sportive concernée *</label><input name="sport" required placeholder="Ex. Athlétisme, football, natation..." /></div><div><label>Niveau d'intervention souhaité *</label><select name="level" required><option value="">Choisir</option><option>Provincial</option><option>Régional</option><option>National</option></select></div></div>
-          </fieldset>
-          <fieldset><legend>2. Diplômes et qualifications</legend>
-            <div class="form-row"><div><label>Dernier diplôme académique obtenu</label><input name="academicDegree" /></div><div><label>Spécialité du diplôme</label><input name="degreeSpecialty" /></div></div>
-            <div class="form-row"><div><label>Établissement ayant délivré le diplôme</label><input name="degreeInstitution" /></div><div><label>Année d'obtention</label><input name="degreeYear" type="number" min="1950" max="2100" /></div></div>
-            <div class="form-row"><div><label>Diplômes sportifs ou fédéraux</label><input name="sportDiplomas" /></div><div><label>Diplômes d'entraîneur</label><input name="coachDiplomas" /></div></div>
-            <div class="form-row"><div><label>Diplômes d'arbitre</label><input name="refereeDiplomas" /></div><div><label>Formations en sport scolaire</label><input name="schoolSportTraining" /></div></div>
-            <div><label>Formations complémentaires</label><textarea name="additionalTraining" placeholder="Encadrement, coaching, management sportif, organisation des compétitions..."></textarea></div>
-            <div class="notice">Prototype : les pièces jointes sont listées par nom de fichier. Pour une version serveur, un stockage sécurisé des fichiers doit être ajouté.</div>
-            <div class="form-row"><div><label>Copies des diplômes / attestations</label><input name="attachments" type="file" multiple accept=".pdf,.png,.jpg,.jpeg" /></div><div><label>Projet en PDF</label><input name="projectFile" type="file" accept=".pdf" /></div></div>
-          </fieldset>
-          <fieldset><legend>3. Niveau d'expérience</legend>
-            <div class="form-row"><div><label>Années d'expérience</label><input name="experienceYears" type="number" min="0" /></div><div><label>Participation aux championnats</label><input name="championships" placeholder="Provinciaux, régionaux, nationaux, internationaux" /></div></div>
-            <div class="form-row"><div><label>Expérience comme entraîneur</label><input name="coachExperience" /></div><div><label>Expérience comme arbitre</label><input name="refereeExperience" /></div></div>
-            <div class="form-row"><div><label>Expérience comme organisateur</label><input name="organizerExperience" /></div><div><label>Expérience comme conseiller / commission technique</label><input name="technicalExperience" /></div></div>
-            <div><label>Résultats obtenus ou contributions significatives</label><textarea name="achievements"></textarea></div>
-          </fieldset>
-          <fieldset><legend>4. Projet de développement de la discipline sportive</legend>
-            <div><label>Diagnostic de la discipline</label><textarea name="diagnosis"></textarea></div>
-            <div class="form-row"><div><label>Objectifs proposés</label><textarea name="objectives"></textarea></div><div><label>Actions prévues</label><textarea name="actions"></textarea></div></div>
-            <div class="form-row"><div><label>Public cible</label><input name="targetAudience" /></div><div><label>Partenaires à mobiliser</label><input name="partners" /></div></div>
-            <div class="form-row"><div><label>Calendrier prévisionnel</label><textarea name="calendar"></textarea></div><div><label>Indicateurs de suivi</label><textarea name="indicators"></textarea></div></div>
-            <div><label>Résultats attendus</label><textarea name="expectedResults"></textarea></div>
-          </fieldset>
-          <div class="actions"><button type="submit">Enregistrer la candidature</button><button type="reset" class="btn-light">Réinitialiser</button></div>
-        </form>
-        <div id="confirmation" class="success-box hidden"></div>
-      </div>
-    </section>
-    <section id="profile" class="section">
-      <div class="card"><h2>Espace utilisateur</h2><p>Collez votre lien personnel ou votre identifiant de dossier pour consulter votre candidature.</p><div class="form-row"><div><label>Lien personnel ou ID</label><input id="profileToken" placeholder="Ex. CT-..." /></div><div style="display:flex; align-items:end;"><button onclick="loadProfile()">Consulter</button></div></div><div id="profileResult"></div></div>
-    </section>
-    <section id="admin" class="section">
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-          <h2 style="margin:0">Espace administrateur</h2>
-          <button class="btn-danger" style="padding:8px 14px;font-size:.85rem;" onclick="logout()">🔓 Se déconnecter</button>
-        </div>
-        <div class="notice">Prototype local : aucun mot de passe serveur n'est utilisé. Pour une version réelle, il faut ajouter une authentification sécurisée.</div>
-        <div class="grid grid-3"><div><label>Académie</label><input id="filterAcademy" oninput="renderAdminTable()" /></div><div><label>Discipline</label><input id="filterSport" oninput="renderAdminTable()" /></div><div><label>Statut</label><select id="filterStatus" onchange="renderAdminTable()"><option value="">Tous</option><option>Reçu</option><option>En cours d'étude</option><option>Incomplet</option><option>Validé</option><option>Non retenu</option></select></div></div>
-        <div class="actions"><button onclick="exportCSV()">Exporter Excel/CSV</button><button class="btn-light" onclick="window.print()">Imprimer / PDF</button><button class="btn-danger" onclick="clearAllData()">Vider les données démo</button></div>
-        <div style="overflow:auto;"><table><thead><tr><th>ID</th><th>Nom</th><th>Académie</th><th>Direction</th><th>Sport</th><th>Niveau</th><th>Diplôme</th><th>Exp.</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="adminTable"></tbody></table></div>
-      </div>
-    </section>
-    <section id="dashboard" class="section">
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-          <h2 style="margin:0">Tableau de bord statistique</h2>
-          <button class="btn-danger" style="padding:8px 14px;font-size:.85rem;" onclick="logout()">🔓 Se déconnecter</button>
-        </div>
-        <div class="grid grid-3"><div class="metric"><strong id="mTotal">0</strong>Total candidats</div><div class="metric"><strong id="mReceived">0</strong>Dossiers reçus</div><div class="metric"><strong id="mValidated">0</strong>Dossiers validés</div><div class="metric"><strong id="mIncomplete">0</strong>Dossiers incomplets</div><div class="metric"><strong id="mRejected">0</strong>Non retenus</div><div class="metric"><strong id="mNational">0</strong>Niveau national</div></div>
-      </div>
-      <div class="grid grid-2" style="margin-top:18px"><div class="card"><h3>Par académie</h3><div id="byAcademy"></div></div><div class="card"><h3>Par discipline sportive</h3><div id="bySport"></div></div><div class="card"><h3>Par niveau</h3><div id="byLevel"></div></div><div class="card"><h3>Par diplôme</h3><div id="byDiploma"></div></div></div>
-    </section>
-    <section id="printableProfile" class="section"><div id="printContent" class="print-card"></div></section>
-  </main>
-  <div class="footer">Direction de la Promotion du Sport Scolaire </div>
+ <header>
+ <div class="header-content">
+ <h1>Plateforme des conseillers techniques du sport scolaire</h1>
+ <p>Gestion des candidatures provinciales, régionales et nationales pour la promotion et le développement du sport scolaire.</p>
+ </div>
+ </header>
+ <nav>
+ <div class="nav-inner">
+ <button onclick="showSection('home')">Accueil</button>
+ <button class="btn-secondary" onclick="showSection('candidate')">Déposer ma candidature</button>
+ <button class="btn-light" onclick="showSection('profile')">Espace utilisateur</button>
+ <button class="btn-accent nav-locked" onclick="requireAuth('admin')">Espace administrateur</button>
+ <button class="btn-light nav-locked" onclick="requireAuth('dashboard')">Tableau de bord</button>
+ </div>
+ </nav>
+ <main>
+ <section id="home" class="section active">
+ <div class="hero">
+ <div class="card">
+ <h2>Un outil digital pour structurer l'expertise technique</h2>
+ <p>Cette plateforme permet de recevoir, organiser, suivre et analyser les candidatures des conseillers techniques dans les différentes disciplines sportives scolaires.</p>
+ <div>
+ <span class="pill">Niveau provincial</span><span class="pill">Niveau régional</span><span class="pill">Niveau national</span><span class="pill">Sport scolaire</span><span class="pill">Diplômes</span><span class="pill">Projet de développement</span>
+ </div>
+ <div class="actions">
+ <button class="btn-secondary" onclick="showSection('candidate')">Déposer ma candidature</button>
+ <button class="btn-light" onclick="showSection('profile')">Accéder à mon espace utilisateur</button>
+ </div>
+ </div>
+ <div class="card">
+ <h3>Objectifs de la plateforme</h3>
+ <p>Centraliser les candidatures, fiabiliser les informations, faciliter l'analyse des dossiers et produire des indicateurs de pilotage.</p>
+ <div class="notice">Les données saisies sont destinées uniquement à l'étude des candidatures et au suivi du dispositif.</div>
+ </div>
+ </div>
+ <div class="grid grid-3" style="margin-top:18px">
+ <div class="metric"><strong id="mTotalHome">0</strong>Candidatures enregistrées</div>
+ <div class="metric"><strong id="mValidatedHome">0</strong>Dossiers validés</div>
+ <div class="metric"><strong id="mSportsHome">0</strong>Disciplines renseignées</div>
+ </div>
+ </section>
+ <section id="candidate" class="section">
+ <div class="card">
+ <h2>Formulaire de candidature</h2>
+ <p class="small">Veuillez renseigner soigneusement les informations. Les champs principaux sont obligatoires.</p>
+ <form id="candidateForm">
+ <fieldset><legend>1. Informations personnelles et professionnelles</legend>
+ <div class="form-row"><div><label>Nom et prénom *</label><input name="fullName" required /></div><div><label>CIN ou numéro professionnel *</label><input name="identifier" required /></div></div>
+ <div class="form-row"><div><label>Adresse e-mail *</label><input name="email" type="email" required /></div><div><label>Téléphone *</label><input name="phone" required /></div></div>
+ <div class="form-row"><div><label>Académie régionale *</label><input name="academy" required /></div><div><label>Direction provinciale *</label><input name="province" required /></div></div>
+ <div class="form-row"><div><label>Établissement / structure d'affectation</label><input name="institution" /></div><div><label>Fonction actuelle</label><input name="currentRole" /></div></div>
+ <div class="form-row"><div><label>Discipline sportive concernée *</label><input name="sport" required placeholder="Ex. Athlétisme, football, natation..." /></div><div><label>Niveau d'intervention souhaité *</label><select name="level" required><option value="">Choisir</option><option>Provincial</option><option>Régional</option><option>National</option></select></div></div>
+ </fieldset>
+ <fieldset><legend>2. Diplômes et qualifications</legend>
+ <div class="form-row"><div><label>Dernier diplôme académique obtenu</label><input name="academicDegree" /></div><div><label>Spécialité du diplôme</label><input name="degreeSpecialty" /></div></div>
+ <div class="form-row"><div><label>Établissement ayant délivré le diplôme</label><input name="degreeInstitution" /></div><div><label>Année d'obtention</label><input name="degreeYear" type="number" min="1950" max="2100" /></div></div>
+ <div class="form-row"><div><label>Diplômes sportifs ou fédéraux</label><input name="sportDiplomas" /></div><div><label>Diplômes d'entraîneur</label><input name="coachDiplomas" /></div></div>
+ <div class="form-row"><div><label>Diplômes d'arbitre</label><input name="refereeDiplomas" /></div><div><label>Formations en sport scolaire</label><input name="schoolSportTraining" /></div></div>
+ <div><label>Formations complémentaires</label><textarea name="additionalTraining" placeholder="Encadrement, coaching, management sportif, organisation des compétitions..."></textarea></div>
+ <div class="notice">Les fichiers sont téléversés dans Firebase Storage. Les métadonnées des fichiers sont enregistrées avec la candidature.</div>
+ <div class="form-row"><div><label>Copies des diplômes / attestations</label><input name="attachments" type="file" multiple accept=".pdf,.png,.jpg,.jpeg" /></div><div><label>Projet en PDF</label><input name="projectFile" type="file" accept=".pdf" /></div></div>
+ </fieldset>
+ <fieldset><legend>3. Niveau d'expérience</legend>
+ <div class="form-row"><div><label>Années d'expérience</label><input name="experienceYears" type="number" min="0" /></div><div><label>Participation aux championnats</label><input name="championships" placeholder="Provinciaux, régionaux, nationaux, internationaux" /></div></div>
+ <div class="form-row"><div><label>Expérience comme entraîneur</label><input name="coachExperience" /></div><div><label>Expérience comme arbitre</label><input name="refereeExperience" /></div></div>
+ <div class="form-row"><div><label>Expérience comme organisateur</label><input name="organizerExperience" /></div><div><label>Expérience comme conseiller / commission technique</label><input name="technicalExperience" /></div></div>
+ <div><label>Résultats obtenus ou contributions significatives</label><textarea name="achievements"></textarea></div>
+ </fieldset>
+ <fieldset><legend>4. Projet de développement de la discipline sportive</legend>
+ <div><label>Diagnostic de la discipline</label><textarea name="diagnosis"></textarea></div>
+ <div class="form-row"><div><label>Objectifs proposés</label><textarea name="objectives"></textarea></div><div><label>Actions prévues</label><textarea name="actions"></textarea></div></div>
+ <div class="form-row"><div><label>Public cible</label><input name="targetAudience" /></div><div><label>Partenaires à mobiliser</label><input name="partners" /></div></div>
+ <div class="form-row"><div><label>Calendrier prévisionnel</label><textarea name="calendar"></textarea></div><div><label>Indicateurs de suivi</label><textarea name="indicators"></textarea></div></div>
+ <div><label>Résultats attendus</label><textarea name="expectedResults"></textarea></div>
+ </fieldset>
+ <div class="actions"><button type="submit">Enregistrer la candidature</button><button type="reset" class="btn-light">Réinitialiser</button></div>
+ </form>
+ <div id="confirmation" class="success-box hidden"></div>
+ </div>
+ </section>
+ <section id="profile" class="section">
+ <div class="card"><h2>Espace utilisateur</h2><p>Collez votre lien personnel ou votre identifiant de dossier pour consulter votre candidature.</p><div class="form-row"><div><label>Lien personnel ou ID</label><input id="profileToken" placeholder="Ex. CT-..." /></div><div style="display:flex; align-items:end;"><button onclick="loadProfile()">Consulter</button></div></div><div id="profileResult"></div></div>
+ </section>
+ <section id="admin" class="section">
+ <div class="card">
+ <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+ <h2 style="margin:0">Espace administrateur</h2>
+ <button class="btn-danger" style="padding:8px 14px;font-size:.85rem;" onclick="logout()">🔓 Se déconnecter</button>
+ </div>
+ <div class="notice">Accès admin via Firebase Authentication. Les fichiers sont téléchargés depuis Firebase Storage uniquement si les règles Storage autorisent l'utilisateur connecté.</div>
+ <div class="grid grid-3"><div><label>Académie</label><input id="filterAcademy" oninput="renderAdminTable()" /></div><div><label>Discipline</label><input id="filterSport" oninput="renderAdminTable()" /></div><div><label>Statut</label><select id="filterStatus" onchange="renderAdminTable()"><option value="">Tous</option><option>Reçu</option><option>En cours d'étude</option><option>Incomplet</option><option>Validé</option><option>Non retenu</option></select></div></div>
+ <div class="actions"><button onclick="exportCSV()">Exporter Excel/CSV</button><button class="btn-light" onclick="window.print()">Imprimer / PDF</button><button class="btn-danger" onclick="clearAllData()">Vider les données démo</button></div>
+ <div style="overflow:auto;"><table><thead><tr><th>ID</th><th>Nom</th><th>Académie</th><th>Direction</th><th>Sport</th><th>Niveau</th><th>Diplôme</th><th>Exp.</th><th>Statut</th><th>Fichiers</th><th>Actions</th></tr></thead><tbody id="adminTable"></tbody></table></div>
+ </div>
+ </section>
+ <section id="dashboard" class="section">
+ <div class="card">
+ <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+ <h2 style="margin:0">Tableau de bord statistique</h2>
+ <button class="btn-danger" style="padding:8px 14px;font-size:.85rem;" onclick="logout()">🔓 Se déconnecter</button>
+ </div>
+ <div class="grid grid-3"><div class="metric"><strong id="mTotal">0</strong>Total candidats</div><div class="metric"><strong id="mReceived">0</strong>Dossiers reçus</div><div class="metric"><strong id="mValidated">0</strong>Dossiers validés</div><div class="metric"><strong id="mIncomplete">0</strong>Dossiers incomplets</div><div class="metric"><strong id="mRejected">0</strong>Non retenus</div><div class="metric"><strong id="mNational">0</strong>Niveau national</div></div>
+ </div>
+ <div class="grid grid-2" style="margin-top:18px"><div class="card"><h3>Par académie</h3><div id="byAcademy"></div></div><div class="card"><h3>Par discipline sportive</h3><div id="bySport"></div></div><div class="card"><h3>Par niveau</h3><div id="byLevel"></div></div><div class="card"><h3>Par diplôme</h3><div id="byDiploma"></div></div></div>
+ </section>
+ <section id="printableProfile" class="section"><div id="printContent" class="print-card"></div></section>
+ </main>
+ <div class="footer">Direction de la Promotion du Sport Scolaire </div>
 
-  <!-- ===== LOCK MODAL ===== -->
-  <div id="lockOverlay" class="lock-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
-    <div class="lock-box">
-      <span class="lock-icon">🔐</span>
-      <h3 id="lockTitle">Accès sécurisé</h3>
-      <p id="lockDesc">Saisissez le code administrateur pour accéder à cet espace.</p>
-      <input type="password" id="lockInput" placeholder="••••••••" maxlength="32"
-             onkeydown="if(event.key==='Enter') checkPassword()"
-             oninput="clearLockError()" />
-      <div id="lockError" class="lock-error"></div>
-      <button class="lock-btn" onclick="checkPassword()">Confirmer</button>
-      <button class="btn-light lock-btn" style="margin-top:8px;" onclick="closeLock()">Annuler</button>
-      <div id="lockAttempts" class="lock-attempts"></div>
-    </div>
-  </div>
+ <!-- ===== LOCK MODAL ===== -->
+ <div id="lockOverlay" class="lock-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+ <div class="lock-box">
+ <span class="lock-icon">🔐</span>
+ <h3 id="lockTitle">Connexion administrateur</h3>
+ <p id="lockDesc">Connectez-vous avec le compte admin Firebase pour accéder aux candidatures et télécharger les pièces jointes.</p>
+ <input type="email" id="adminEmail" placeholder="Email admin" autocomplete="username"
+ onkeydown="if(event.key==='Enter') checkAdminLogin()"
+ oninput="clearLockError()" />
+ <input type="password" id="adminPassword" placeholder="Mot de passe" maxlength="128" autocomplete="current-password"
+ onkeydown="if(event.key==='Enter') checkAdminLogin()"
+ oninput="clearLockError()" />
+ <div id="lockError" class="lock-error"></div>
+ <button class="lock-btn" onclick="checkAdminLogin()">Se connecter</button>
+ <button class="btn-light lock-btn" style="margin-top:8px;" onclick="closeLock()">Annuler</button>
+ <div id="lockAttempts" class="lock-attempts"></div>
+ </div>
+ </div>
 
-  <script>
-    // ===== CONFIGURATION DU MOT DE PASSE =====
-    // Pour changer le code : modifiez la valeur ci-dessous
-    const ADMIN_PASSWORD = "Sport2025!";
-    const MAX_ATTEMPTS = 5;
-    const BLOCK_DURATION_MS = 2 * 60 * 1000; // 2 minutes
-
-    // ===== ÉTAT DE LA SESSION =====
+ <script>
+    // ===== AUTHENTIFICATION ADMIN FIREBASE =====
     const SESSION_KEY = "ct_admin_session";
-    const BLOCK_KEY   = "ct_admin_blocked";
-    const ATTEMPTS_KEY = "ct_admin_attempts";
     let pendingSection = null;
+    window.currentAdminUser = null;
+    window.currentAdminIsAdmin = false;
 
     function isAuthenticated() {
-      return sessionStorage.getItem(SESSION_KEY) === "granted";
+      return Boolean(window.currentAdminUser && window.currentAdminIsAdmin);
     }
+
     function authenticate() {
       sessionStorage.setItem(SESSION_KEY, "granted");
-      localStorage.removeItem(ATTEMPTS_KEY);
-      localStorage.removeItem(BLOCK_KEY);
     }
-    function logout() {
+
+    async function logout() {
       sessionStorage.removeItem(SESSION_KEY);
+      window.currentAdminUser = null;
+      window.currentAdminIsAdmin = false;
+
+      if (window.logoutAdminFirebase) {
+        await window.logoutAdminFirebase();
+      }
+
       showSection("home");
     }
 
-    // ===== GESTION DES TENTATIVES =====
-    function getAttempts() { return parseInt(localStorage.getItem(ATTEMPTS_KEY) || "0"); }
-    function incrementAttempts() { localStorage.setItem(ATTEMPTS_KEY, getAttempts() + 1); }
-    function isBlocked() {
-      const until = parseInt(localStorage.getItem(BLOCK_KEY) || "0");
-      if (Date.now() < until) return until;
-      if (until) { localStorage.removeItem(BLOCK_KEY); localStorage.removeItem(ATTEMPTS_KEY); }
-      return false;
-    }
-    function blockUser() {
-      const until = Date.now() + BLOCK_DURATION_MS;
-      localStorage.setItem(BLOCK_KEY, until);
-    }
-
-    // ===== AFFICHAGE DU VERROU =====
     function requireAuth(section) {
-      if (isAuthenticated()) { showSection(section); return; }
-      const blocked = isBlocked();
-      if (blocked) { showBlockedMessage(blocked); return; }
+      if (isAuthenticated()) {
+        showSection(section);
+        return;
+      }
+
       pendingSection = section;
-      document.getElementById("lockInput").value = "";
+      document.getElementById("adminPassword").value = "";
       document.getElementById("lockError").textContent = "";
       document.getElementById("lockAttempts").textContent = "";
       document.getElementById("lockOverlay").classList.remove("hidden");
-      setTimeout(() => document.getElementById("lockInput").focus(), 50);
+      setTimeout(() => document.getElementById("adminEmail").focus(), 50);
     }
+
     function closeLock() {
       document.getElementById("lockOverlay").classList.add("hidden");
       pendingSection = null;
     }
+
     function clearLockError() {
-      document.getElementById("lockInput").classList.remove("error");
+      ["adminEmail", "adminPassword"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("error");
+      });
       document.getElementById("lockError").textContent = "";
     }
 
-    function checkPassword() {
-      const blocked = isBlocked();
-      if (blocked) { showBlockedMessage(blocked); return; }
+    async function checkAdminLogin() {
+      const emailEl = document.getElementById("adminEmail");
+      const passwordEl = document.getElementById("adminPassword");
+      const email = emailEl.value.trim();
+      const password = passwordEl.value;
 
-      const input = document.getElementById("lockInput").value;
-      if (input === ADMIN_PASSWORD) {
+      clearLockError();
+
+      if (!email || !password) {
+        if (!email) emailEl.classList.add("error");
+        if (!password) passwordEl.classList.add("error");
+        document.getElementById("lockError").textContent = "Email et mot de passe obligatoires.";
+        return;
+      }
+
+      if (!window.loginAdminFirebase) {
+        document.getElementById("lockError").textContent = "Firebase Auth n'est pas encore chargé. Réessayez dans quelques secondes.";
+        return;
+      }
+
+      const buttons = document.querySelectorAll("#lockOverlay button");
+      buttons.forEach(btn => btn.disabled = true);
+      document.getElementById("lockAttempts").textContent = "Connexion en cours...";
+
+      try {
+        await window.loginAdminFirebase(email, password);
         authenticate();
         document.getElementById("lockOverlay").classList.add("hidden");
-        if (pendingSection) showSection(pendingSection);
-        pendingSection = null;
-      } else {
-        incrementAttempts();
-        const remaining = MAX_ATTEMPTS - getAttempts();
-        const inp = document.getElementById("lockInput");
-        inp.classList.add("error");
-        inp.value = "";
-        if (remaining <= 0) {
-          blockUser();
-          showBlockedMessage(isBlocked());
-        } else {
-          document.getElementById("lockError").textContent = "Code incorrect. Veuillez réessayer.";
-          document.getElementById("lockAttempts").textContent =
-            remaining === 1 ? "⚠️ Dernière tentative avant blocage temporaire."
-                            : `Tentatives restantes : ${remaining}`;
+        document.getElementById("adminPassword").value = "";
+
+        if (pendingSection) {
+          showSection(pendingSection);
         }
+
+        pendingSection = null;
+      } catch (error) {
+        emailEl.classList.add("error");
+        passwordEl.classList.add("error");
+        document.getElementById("lockError").textContent = error.message || "Connexion admin refusée.";
+        document.getElementById("lockAttempts").textContent = "";
+      } finally {
+        buttons.forEach(btn => btn.disabled = false);
       }
     }
-    function showBlockedMessage(until) {
-      const mins = Math.ceil((until - Date.now()) / 60000);
-      document.getElementById("lockError").textContent = "";
-      document.getElementById("lockAttempts").textContent = "";
-      document.getElementById("lockInput").disabled = true;
-      document.getElementById("lockInput").placeholder = "Accès bloqué";
-      document.getElementById("lockInput").classList.add("error");
-      document.querySelector(".lock-box button").disabled = true;
-      document.getElementById("lockAttempts").innerHTML =
-        `<span class="lock-blocked">🚫 Trop de tentatives. Réessayez dans ${mins} minute${mins > 1 ? "s" : ""}.</span>`;
-      // re-enable when block expires
-      setTimeout(() => {
-        document.getElementById("lockInput").disabled = false;
-        document.getElementById("lockInput").placeholder = "••••••••";
-        document.getElementById("lockInput").classList.remove("error");
-        document.querySelector(".lock-box button").disabled = false;
-        document.getElementById("lockAttempts").textContent = "";
-      }, until - Date.now());
-    }
+
+    window.onAdminAuthStateChanged = function(user, isAdmin) {
+      window.currentAdminUser = user || null;
+      window.currentAdminIsAdmin = Boolean(isAdmin);
+
+      if (user && isAdmin) {
+        authenticate();
+      } else {
+        sessionStorage.removeItem(SESSION_KEY);
+      }
+    };
 
     // ===== NAVIGATION =====
     const storageKey = "ct_sport_scolaire_candidates_v1";
@@ -374,26 +380,99 @@
     }
     function statusClass(s){ return s === "En cours d'étude" ? "encours" : s === "Non retenu" ? "Nonretenu" : s; }
 
-    document.getElementById("candidateForm").addEventListener("submit", function(e){
-      e.preventDefault(); const form = e.target; const fd = new FormData(form); const candidate = {};
-      fd.forEach((value, key) => { if(!(value instanceof File)) candidate[key] = value; });
-      candidate.id = makeToken(); candidate.status = "Reçu"; candidate.createdAt = new Date().toLocaleString("fr-FR");
-      candidate.attachments = form.attachments.files ? Array.from(form.attachments.files).map(f => f.name) : [];
-      candidate.projectFile = form.projectFile.files && form.projectFile.files[0] ? form.projectFile.files[0].name : "";
-      candidate.profileLink = location.href.split("#")[0] + "#profile=" + candidate.id;
-      const data = getCandidates(); data.push(candidate); saveCandidates(data);
+    document.getElementById("candidateForm").addEventListener("submit", async function(e){
+      e.preventDefault();
 
-if (window.enregistrerCandidatureFirebase) {
-  window.enregistrerCandidatureFirebase(candidate);
-}
-      const box = document.getElementById("confirmation"); box.classList.remove("hidden");
-      box.innerHTML = `<h3>Votre candidature a été enregistrée avec succès.</h3><p>Un lien utilisateur personnel vous permettra de suivre l'état de votre dossier et de compléter vos informations si nécessaire.</p><p><strong>Nom :</strong> ${escapeHTML(candidate.fullName)}</p><p><strong>Discipline :</strong> ${escapeHTML(candidate.sport)}</p><p><strong>Niveau demandé :</strong> ${escapeHTML(candidate.level)}</p><p><strong>Statut initial :</strong> <span class="status Reçu">Reçu</span></p><p><strong>Lien personnel :</strong></p><div class="profile-link">${candidate.profileLink}</div><div class="actions"><button onclick="printCandidate('${candidate.id}')">Télécharger / imprimer ma fiche</button><button class="btn-light" onclick="copyText('${candidate.profileLink}')">Copier le lien</button></div>`;
-      form.reset();
+      const form = e.target;
+      const fd = new FormData(form);
+      const candidate = {};
+
+      fd.forEach((value, key) => {
+        if (!(value instanceof File)) {
+          candidate[key] = value;
+        }
+      });
+
+      candidate.id = makeToken();
+      candidate.status = "Reçu";
+      candidate.createdAt = new Date().toLocaleString("fr-FR");
+      candidate.profileLink = location.href.split("#")[0] + "#profile=" + candidate.id;
+
+      try {
+        const attachmentFiles = form.attachments.files
+          ? Array.from(form.attachments.files)
+          : [];
+
+        candidate.attachments = await Promise.all(
+          attachmentFiles.map(file =>
+            window.uploadCandidateFile(file, candidate.id, "attachments")
+          )
+        );
+
+        candidate.projectFile = form.projectFile.files && form.projectFile.files[0]
+          ? await window.uploadCandidateFile(form.projectFile.files[0], candidate.id, "project")
+          : null;
+
+        const data = getCandidates();
+        data.push(candidate);
+        saveCandidates(data);
+
+        if (window.enregistrerCandidatureFirebase) {
+          await window.enregistrerCandidatureFirebase(candidate);
+        }
+
+        const box = document.getElementById("confirmation");
+        box.classList.remove("hidden");
+        box.innerHTML = `<h3>Votre candidature a été enregistrée avec succès.</h3><p>Les fichiers sélectionnés ont été téléversés dans Firebase Storage.</p><p>Un lien utilisateur personnel vous permettra de suivre l'état de votre dossier et de compléter vos informations si nécessaire.</p><p><strong>Nom :</strong> ${escapeHTML(candidate.fullName)}</p><p><strong>Discipline :</strong> ${escapeHTML(candidate.sport)}</p><p><strong>Niveau demandé :</strong> ${escapeHTML(candidate.level)}</p><p><strong>Statut initial :</strong> <span class="status Reçu">Reçu</span></p><p><strong>Lien personnel :</strong></p><div class="profile-link">${candidate.profileLink}</div><div class="actions"><button onclick="printCandidate('${candidate.id}')">Télécharger / imprimer ma fiche</button><button class="btn-light" onclick="copyText('${candidate.profileLink}')">Copier le lien</button></div>`;
+        form.reset();
+      } catch (error) {
+        console.error("Erreur upload fichiers :", error);
+        alert(error.message || "Erreur lors de l'upload des fichiers.");
+      }
     });
 
     function escapeHTML(str){ return String(str || "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])); }
+    function jsString(str){ return String(str || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\n/g, "\\n").replace(/\r/g, ""); }
     function copyText(text){ navigator.clipboard.writeText(text); alert("Lien copié."); }
-    function renderCandidateCard(c){ return `<div class="card"><h3>${escapeHTML(c.fullName)} <span class="status ${statusClass(c.status)}">${escapeHTML(c.status)}</span></h3><p><strong>ID :</strong> ${escapeHTML(c.id)}</p><p><strong>Académie :</strong> ${escapeHTML(c.academy)} | <strong>Direction :</strong> ${escapeHTML(c.province)}</p><p><strong>Discipline :</strong> ${escapeHTML(c.sport)} | <strong>Niveau :</strong> ${escapeHTML(c.level)}</p><p><strong>Diplôme :</strong> ${escapeHTML(c.academicDegree)} - ${escapeHTML(c.degreeSpecialty)}</p><p><strong>Expérience :</strong> ${escapeHTML(c.experienceYears)} année(s)</p><p><strong>Projet :</strong> ${escapeHTML((c.objectives || "").slice(0, 240))}</p><p><strong>Pièces jointes :</strong> ${escapeHTML((c.attachments || []).join(", ") || "Aucune")}</p><div class="actions"><button onclick="printCandidate('${c.id}')">Télécharger / imprimer la fiche</button></div></div>`; } 
+    function fileNames(files){
+      return (files || [])
+        .map(file => typeof file === "string" ? file : file.name)
+        .join(", ") || "Aucune";
+    }
+    function projectFileName(file){
+      if (!file) return "Aucun";
+      return typeof file === "string" ? file : file.name;
+    }
+    function renderDownloadButton(file, label) {
+      if (!file || typeof file === "string" || !file.storagePath) return "";
+      const safeName = escapeHTML(label || file.name || "Télécharger");
+      const storagePath = escapeHTML(jsString(file.storagePath));
+      const fileName = escapeHTML(jsString(file.name || "document"));
+      return `<button class="btn-light" style="padding:6px 10px;font-size:.8rem;margin:2px 0;" onclick="downloadCandidateFile('${storagePath}', '${fileName}')">${safeName}</button>`;
+    }
+    function renderAdminFiles(c) {
+      const attachmentButtons = (c.attachments || [])
+        .filter(file => file && typeof file !== "string" && file.storagePath)
+        .map(file => renderDownloadButton(file, file.name))
+        .join("<br>");
+
+      const projectButton = c.projectFile && typeof c.projectFile !== "string" && c.projectFile.storagePath
+        ? renderDownloadButton(c.projectFile, c.projectFile.name || "Projet PDF")
+        : "";
+
+      const fallbackNames = [];
+      if (!attachmentButtons && fileNames(c.attachments) !== "Aucune") fallbackNames.push(`<span class="small">${escapeHTML(fileNames(c.attachments))}</span>`);
+      if (!projectButton && projectFileName(c.projectFile) !== "Aucun") fallbackNames.push(`<span class="small">${escapeHTML(projectFileName(c.projectFile))}</span>`);
+
+      const html = [
+        attachmentButtons ? `<strong>Diplômes :</strong><br>${attachmentButtons}` : "",
+        projectButton ? `<strong>Projet :</strong><br>${projectButton}` : "",
+        ...fallbackNames
+      ].filter(Boolean).join("<br>");
+
+      return html || "<span class='small'>Aucun fichier</span>";
+    }
+    function renderCandidateCard(c){ return `<div class="card"><h3>${escapeHTML(c.fullName)} <span class="status ${statusClass(c.status)}">${escapeHTML(c.status)}</span></h3><p><strong>ID :</strong> ${escapeHTML(c.id)}</p><p><strong>Académie :</strong> ${escapeHTML(c.academy)} | <strong>Direction :</strong> ${escapeHTML(c.province)}</p><p><strong>Discipline :</strong> ${escapeHTML(c.sport)} | <strong>Niveau :</strong> ${escapeHTML(c.level)}</p><p><strong>Diplôme :</strong> ${escapeHTML(c.academicDegree)} - ${escapeHTML(c.degreeSpecialty)}</p><p><strong>Expérience :</strong> ${escapeHTML(c.experienceYears)} année(s)</p><p><strong>Projet :</strong> ${escapeHTML((c.objectives || "").slice(0, 240))}</p><p><strong>Pièces jointes :</strong> ${escapeHTML(fileNames(c.attachments))}</p><div class="actions"><button onclick="printCandidate('${c.id}')">Télécharger / imprimer la fiche</button></div></div>`; } 
 async function findCandidateById(id) {
   const data = window.lireCandidaturesFirebase
     ? await window.lireCandidaturesFirebase()
@@ -416,11 +495,44 @@ async function findCandidateById(id) {
     ? renderCandidateCard(c)
     : `<div class="notice">Aucun dossier trouvé avec cet identifiant.</div>`;
 }
-    async function renderAdminTable(){ const a = document.getElementById("filterAcademy").value.toLowerCase(); const s = document.getElementById("filterSport").value.toLowerCase(); const st = document.getElementById("filterStatus").value; const allCandidates = window.lireCandidaturesFirebase
-  ? await window.lireCandidaturesFirebase()
-  : getCandidates();
+    async function renderAdminTable(){
+      const a = document.getElementById("filterAcademy").value.toLowerCase();
+      const s = document.getElementById("filterSport").value.toLowerCase();
+      const st = document.getElementById("filterStatus").value;
 
-const rows = allCandidates.filter(c => (!a || (c.academy || "").toLowerCase().includes(a)) && (!s || (c.sport || "").toLowerCase().includes(s)) && (!st || c.status === st)); document.getElementById("adminTable").innerHTML = rows.map(c => `<tr><td>${escapeHTML(c.id)}</td><td>${escapeHTML(c.fullName)}</td><td>${escapeHTML(c.academy)}</td><td>${escapeHTML(c.province)}</td><td>${escapeHTML(c.sport)}</td><td>${escapeHTML(c.level)}</td><td>${escapeHTML(c.academicDegree)}</td><td>${escapeHTML(c.experienceYears || "0")} an(s)</td><td><span class="status ${statusClass(c.status)}">${escapeHTML(c.status)}</span></td><td><select onchange="updateStatus('${c.firebaseId || c.id}', this.value)">${["Reçu","En cours d'étude","Incomplet","Validé","Non retenu"].map(x => `<option ${x===c.status?"selected":""}>${x}</option>`).join("")}</select><button class="btn-light" onclick="printCandidate('${c.id}')">Fiche</button></td></tr>`).join(""); renderDashboard(); }
+      const allCandidates = window.lireCandidaturesFirebase
+        ? await window.lireCandidaturesFirebase()
+        : getCandidates();
+
+      const rows = allCandidates.filter(c =>
+        (!a || (c.academy || "").toLowerCase().includes(a)) &&
+        (!s || (c.sport || "").toLowerCase().includes(s)) &&
+        (!st || c.status === st)
+      );
+
+      document.getElementById("adminTable").innerHTML = rows.map(c => `
+        <tr>
+          <td>${escapeHTML(c.id || c.firebaseId)}</td>
+          <td>${escapeHTML(c.fullName)}</td>
+          <td>${escapeHTML(c.academy)}</td>
+          <td>${escapeHTML(c.province)}</td>
+          <td>${escapeHTML(c.sport)}</td>
+          <td>${escapeHTML(c.level)}</td>
+          <td>${escapeHTML(c.academicDegree)}</td>
+          <td>${escapeHTML(c.experienceYears || "0")} an(s)</td>
+          <td><span class="status ${statusClass(c.status)}">${escapeHTML(c.status)}</span></td>
+          <td>${renderAdminFiles(c)}</td>
+          <td>
+            <select onchange="updateStatus('${jsString(c.firebaseId || c.id)}', this.value)">
+              ${["Reçu","En cours d'étude","Incomplet","Validé","Non retenu"].map(x => `<option ${x===c.status?"selected":""}>${x}</option>`).join("")}
+            </select>
+            <button class="btn-light" onclick="printCandidate('${jsString(c.id || c.firebaseId)}')">Fiche</button>
+          </td>
+        </tr>
+      `).join("");
+
+      renderDashboard();
+    }
     async function updateStatus(id, status) {
   if (window.modifierStatutFirebase) {
     await window.modifierStatutFirebase(id, status);
@@ -472,8 +584,8 @@ const rows = allCandidates.filter(c => (!a || (c.academy || "").toLowerCase().in
     <p><strong>Résultats attendus :</strong> ${escapeHTML(c.expectedResults)}</p>
 
     <h3>Pièces jointes</h3>
-    <p><strong>Copies des diplômes / attestations :</strong> ${escapeHTML((c.attachments || []).join(", ") || "Aucune")}</p>
-    <p><strong>Projet PDF :</strong> ${escapeHTML(c.projectFile || "Aucun")}</p>
+    <p><strong>Copies des diplômes / attestations :</strong> ${escapeHTML(fileNames(c.attachments))}</p>
+    <p><strong>Projet PDF :</strong> ${escapeHTML(projectFileName(c.projectFile))}</p>
   `;
 
   document.querySelectorAll(".section").forEach(s =>
@@ -569,7 +681,7 @@ const rows = allCandidates.filter(c => (!a || (c.academy || "").toLowerCase().in
   await renderDashboard();
   loadFromHash();
 });
-  </script>
+ </script>
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
@@ -581,8 +693,22 @@ import {
   getDocs,
   doc,
   updateDoc,
+  getDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getBlob,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -602,14 +728,146 @@ import {
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
+
+async function uploadCandidateFile(file, candidateId, folder) {
+  if (!file || file.size === 0) return null;
+
+  const allowedTypes = [
+    "application/pdf",
+    "image/png",
+    "image/jpeg"
+  ];
+
+  const maxSize = 10 * 1024 * 1024; // 10 MB
+
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error(`Type de fichier non autorisé : ${file.name}`);
+  }
+
+  if (file.size > maxSize) {
+    throw new Error(`Fichier trop volumineux : ${file.name}`);
+  }
+
+  const cleanName = file.name.replace(/[^a-zA-Z0-9_.-]/g, "_");
+  const storagePath = `candidatures/${candidateId}/${folder}/${Date.now()}_${cleanName}`;
+  const fileRef = ref(storage, storagePath);
+
+  await uploadBytes(fileRef, file, {
+    contentType: file.type
+  });
+
+  return {
+    name: file.name,
+    storagePath: storagePath,
+    size: file.size,
+    contentType: file.type,
+    uploadedAt: new Date().toISOString()
+  };
+}
+
+window.uploadCandidateFile = uploadCandidateFile;
+
+async function isFirebaseAdmin(user) {
+  if (!user) return false;
+
+  const userDoc = await getDoc(doc(db, "users", user.uid));
+  return userDoc.exists() && userDoc.data().isAdmin === true;
+}
+
+async function loginAdminFirebase(email, password) {
+  const credential = await signInWithEmailAndPassword(auth, email, password);
+  const isAdmin = await isFirebaseAdmin(credential.user);
+
+  if (!isAdmin) {
+    await signOut(auth);
+    throw new Error("Ce compte Firebase n'a pas le rôle administrateur.");
+  }
+
+  window.currentAdminUser = credential.user;
+  window.currentAdminIsAdmin = true;
+
+  if (window.onAdminAuthStateChanged) {
+    window.onAdminAuthStateChanged(credential.user, true);
+  }
+
+  return credential.user;
+}
+
+window.loginAdminFirebase = loginAdminFirebase;
+
+async function logoutAdminFirebase() {
+  await signOut(auth);
+  window.currentAdminUser = null;
+  window.currentAdminIsAdmin = false;
+}
+
+window.logoutAdminFirebase = logoutAdminFirebase;
+
+onAuthStateChanged(auth, async (user) => {
+  let isAdmin = false;
+
+  if (user) {
+    try {
+      isAdmin = await isFirebaseAdmin(user);
+    } catch (error) {
+      console.error("Erreur vérification rôle admin :", error);
+    }
+  }
+
+  window.currentAdminUser = isAdmin ? user : null;
+  window.currentAdminIsAdmin = isAdmin;
+
+  if (window.onAdminAuthStateChanged) {
+    window.onAdminAuthStateChanged(isAdmin ? user : null, isAdmin);
+  }
+});
+
+async function downloadCandidateFile(storagePath, fileName) {
+  if (!storagePath) {
+    alert("Chemin du fichier introuvable.");
+    return;
+  }
+
+  try {
+    const fileRef = ref(storage, storagePath);
+    const safeName = fileName || storagePath.split("/").pop() || "document";
+
+    try {
+      const blob = await getBlob(fileRef);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = safeName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (blobError) {
+      console.warn("Téléchargement direct indisponible, ouverture via URL Firebase :", blobError);
+      const url = await getDownloadURL(fileRef);
+      window.open(url, "_blank", "noopener");
+    }
+  } catch (error) {
+    console.error("Erreur téléchargement fichier :", error);
+    alert("Téléchargement impossible. Vérifiez que vous êtes connecté comme administrateur et que les règles Storage autorisent la lecture.");
+  }
+}
+
+window.downloadCandidateFile = downloadCandidateFile;
+
 async function enregistrerCandidatureFirebase(data) {
   try {
-    await addDoc(collection(db, "candidatures"), {
+    const docRef = await addDoc(collection(db, "candidatures"), {
       ...data,
       dateSoumission: serverTimestamp()
     });
 
-    console.log("Candidature enregistrée dans Firebase");
+    console.log("Candidature enregistrée dans Firebase", docRef.id);
+    return docRef.id;
   } catch (error) {
     console.error("Erreur Firebase :", error);
     alert("Erreur lors de l'enregistrement dans Firebase.");
