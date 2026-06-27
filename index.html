@@ -700,7 +700,6 @@ import {
   getStorage,
   ref,
   uploadBytes,
-  getBlob,
   getDownloadURL
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-storage.js";
 import {
@@ -830,30 +829,21 @@ async function downloadCandidateFile(storagePath, fileName) {
     return;
   }
 
+  if (!window.currentAdminIsAdmin) {
+    alert("Vous devez être connecté avec un compte administrateur pour ouvrir ce fichier.");
+    return;
+  }
+
   try {
     const fileRef = ref(storage, storagePath);
-    const safeName = fileName || storagePath.split("/").pop() || "document";
+    const url = await getDownloadURL(fileRef);
 
-    try {
-      const blob = await getBlob(fileRef);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download = safeName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } catch (blobError) {
-      console.warn("Téléchargement direct indisponible, ouverture via URL Firebase :", blobError);
-      const url = await getDownloadURL(fileRef);
-      window.open(url, "_blank", "noopener");
-    }
+    // Avoid getBlob()/XHR here. On GitHub Pages it can be blocked by CORS.
+    // Opening the Firebase download URL directly lets the browser handle the PDF.
+    window.open(url, "_blank", "noopener");
   } catch (error) {
-    console.error("Erreur téléchargement fichier :", error);
-    alert("Téléchargement impossible. Vérifiez que vous êtes connecté comme administrateur et que les règles Storage autorisent la lecture.");
+    console.error("Erreur ouverture fichier :", error);
+    alert("Impossible d'ouvrir le fichier. Vérifiez la connexion admin, les règles Storage et le document users/{uid}.isAdmin.");
   }
 }
 
@@ -876,7 +866,22 @@ async function enregistrerCandidatureFirebase(data) {
 
 window.enregistrerCandidatureFirebase = enregistrerCandidatureFirebase;
 
+function lireCandidaturesLocales() {
+  try {
+    return JSON.parse(localStorage.getItem("ct_sport_scolaire_candidates_v1") || "[]");
+  } catch (error) {
+    console.error("Erreur lecture localStorage :", error);
+    return [];
+  }
+}
+
 async function lireCandidaturesFirebase() {
+  // Public pages must not try to read the protected Firestore collection.
+  // Only an authenticated admin can read all candidatures from Firebase.
+  if (!window.currentAdminIsAdmin) {
+    return lireCandidaturesLocales();
+  }
+
   try {
     const snapshot = await getDocs(collection(db, "candidatures"));
 
@@ -891,8 +896,7 @@ async function lireCandidaturesFirebase() {
     return candidatures;
   } catch (error) {
     console.error("Erreur de lecture Firebase :", error);
-    alert("Erreur lors de la lecture des candidatures Firebase.");
-    return [];
+    return lireCandidaturesLocales();
   }
 }
 
